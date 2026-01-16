@@ -19,27 +19,40 @@ public class LoanApprovalService {
             int amountRequested,
             int termMonths
     ) {
-        validate(applicant, amountRequested, termMonths);
 
+        //n1: inicio
+        validate(applicant, amountRequested, termMonths);
+        //n2: validar la entrada
         int score = applicant.creditScore();
         boolean hasDefaults = applicant.hasRecentDefaults();
         int income = applicant.monthlyIncome();
 
         Decision decision;
+        //n3: iniciar variables
 
         if (score < 500) {
+            //n4: score < 500
             decision = Decision.REJECTED;
+            //n5: decisión = RECHAZADO
         } else if (score < 650) {
+            //n6: 500 <= score < 650
             if (income >= 2500 && !hasDefaults) {
+                //n7: income alto y sin impagos
                 decision = Decision.MANUAL_REVIEW;
+                //n8: decisión = REVISIÓN MANUAL
             } else {
                 decision = Decision.REJECTED;
+                //n9: decisión = RECHAZADO
             }
         } else {
+            //n10: score >= 650
             if (amountRequested <= income * 8) {
+                //n11: amount <= income * 8
                 decision = Decision.APPROVED;
+                //n12: decisión = APROBADO
             } else {
                 decision = Decision.MANUAL_REVIEW;
+                //n13: decisión = REVISIÓN MANUAL
             }
         }
 
@@ -47,10 +60,13 @@ public class LoanApprovalService {
                 && applicant.isVip()
                 && score >= 600
                 && !hasDefaults) {
+            //n14: caso VIP mejora decisión
             decision = Decision.APPROVED;
+            //n15: decisión = APROBADO
         }
 
         return decision;
+        //n16: final
     }
 
     private void validate(Applicant applicant, int amountRequested, int termMonths) {
